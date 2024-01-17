@@ -1,0 +1,10 @@
+asgiref==3.7.2
+autopep8==2.0.4
+Django==5.0.1
+django-cors-headers==4.3.1
+pillow==10.2.0
+pycodestyle==2.11.1
+python-decouple==3.8
+sqlparse==0.4.4
+toml==0.10.2
+tzdata==2023.4
