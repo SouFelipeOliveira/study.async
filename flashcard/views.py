@@ -41,6 +41,7 @@ def novo_flashcard(request):
     
     context = {
         'dificuldades': dificuldades,
-        'categorias': categorias
+        'categorias': categorias,
+        'flashcard': flashcards
     }
     return render(request, 'novo_flashcard.html', context)
