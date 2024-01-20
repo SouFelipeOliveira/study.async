@@ -54,3 +54,13 @@ def novo_flashcard(request):
         'flashcards': flashcards
     }
     return render(request, 'novo_flashcard.html', context)
+
+def deleteFlashcard(request, id):
+    flashcard = Flashcard.objects.get(id=id)
+    flashcard.delete()
+    messages.add_message(
+            request,
+            messages.SUCCESS,
+            'Flashcard deletado com sucesso'
+        )
+    return redirect('novo_flashcard')
