@@ -5,6 +5,7 @@
 <link href="{% static 'users/styles/cadastro.css' %}" rel="stylesheet">
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <link href="{% static 'flashcard/styles/novo_flashcard.css' %}" rel="stylesheet">
+<script src="{% static 'flashcard/js/flashcard.js' %}"></script>
 {% endblock 'cabecalho' %}
 
 {% block 'conteudo' %}
@@ -109,8 +110,8 @@
             <br>
             <br>
             {% for flashcard in flashcards %}
-                <div class="box-new-flashcard">
-                    <div class="flashcard ">
+                <div class="box-new-flashcard" onclick="flip_card({{flashcard.id}})">
+                    <div class="flashcard {{flashcard.css}}">
                         <div class="flashcard-categoria">
                             {{flashcard.categoria}}
                         </div>
@@ -125,7 +126,7 @@
                         </div>
 
                     </div>
-                    <div class="resposta-flashcard">
+                    <div class="resposta-flashcard" id="{{flashcard.id}}">
                         {{flashcard.resposta}}
                     </div>
 
