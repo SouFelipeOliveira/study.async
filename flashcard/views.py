@@ -57,6 +57,13 @@ def novo_flashcard(request):
 
 def deleteFlashcard(request, id):
     flashcard = Flashcard.objects.get(id=id)
+    if flashcard.user != request.user:
+        messages.add_message(
+            request,
+            constants.ERROR,
+            "Você não pode deletar esse flashcard"
+        )
+        return redirect('novo_flashcard')
     flashcard.delete()
     messages.add_message(
             request,
