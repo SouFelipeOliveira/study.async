@@ -1,8 +1,15 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Categoria, Flashcard
+from .models import (
+    Categoria,
+    Flashcard,
+    Desafio,
+    FlashcardDesafio
+    )
+from django.db.models import Q
 from django.contrib import messages
 from django.contrib.messages import constants
+from django.http import HttpResponse
 
 @login_required(login_url='login')
 def novo_flashcard(request):
@@ -55,8 +62,10 @@ def novo_flashcard(request):
     }
     return render(request, 'novo_flashcard.html', context)
 
+@login_required(login_url='login')
 def deleteFlashcard(request, id):
     flashcard = Flashcard.objects.get(id=id)
+
     if flashcard.user != request.user:
         messages.add_message(
             request,
@@ -71,3 +80,72 @@ def deleteFlashcard(request, id):
             'Flashcard deletado com sucesso'
         )
     return redirect('novo_flashcard')
+
+
+@login_required(login_url='login')
+def iniciar_desafio(request):
+    
+    categorias = Categoria.objects.all()
+    dificuldades = Flashcard.DIFICULDADE_CHOICES
+
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        categorias = request.POST.getlist('categoria')
+        dificuldade = request.POST.get('dificuldade')
+        qtde_perguntas = request.POST.get('qtd_perguntas')
+
+        try:
+            desafio = Desafio(
+                user=request.user,
+                titulo=titulo,
+                dificuldade=dificuldade,
+                quantidade_perguntas=qtde_perguntas
+            )
+            desafio.save()
+
+            desafio.categoria.add(*categorias)
+
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                'Desafio criado com sucesso'
+            )
+        except Exception:
+            messages.add_message(
+                request,
+                constants.ERROR,
+                'Erro ao criar desafio'
+            )
+            return redirect('iniciar_desafio')
+
+
+        flashcards = Flashcard.objects.filter(
+            Q(user=request.user) &
+            Q(dificuldade=dificuldade) &
+            Q(categoria_id__in=categorias)
+            ).order_by('?')
+        
+        if flashcards.count() < int(qtde_perguntas):
+            messages.add_message(
+                request,
+                constants.ERROR,
+                'Não há flashcards suficientes para criar o desafio'
+            )
+            return redirect('novo_flashcard')
+
+        flashcards = flashcards[:int(qtde_perguntas)]
+
+        for f in flashcards:
+            flashcard_desafio = FlashcardDesafio(
+                flashcard=f,
+            )
+            flashcard_desafio.save()
+            desafio.flashcards.add(flashcard_desafio)
+
+        return redirect(f'flashcard/desafio/{desafio.id}')
+
+    context = {
+        'categorias': categorias,
+        'dificuldades': dificuldades
+    }
+    return render(request, 'iniciar_desafio.html', context)
