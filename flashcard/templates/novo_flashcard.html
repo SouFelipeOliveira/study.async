@@ -110,7 +110,7 @@
             <br>
             <br>
             {% for flashcard in flashcards %}
-                <div class="box-new-flashcard" onclick="flip_card({{flashcard.id}})">
+                <div class="box-new-flashcard">
                     <div class="flashcard {{flashcard.css}}">
                         <div class="flashcard-categoria">
                             {{flashcard.categoria}}
@@ -120,7 +120,7 @@
                         <br>
                         <br>
                         <div class="flashcard-box-item">
-                        <p class="flashcard-item">
+                        <p class="flashcard-item" onclick="flip_card({{flashcard.id}})">
                             {{flashcard.pergunta}}
                         </p>
                         </div>

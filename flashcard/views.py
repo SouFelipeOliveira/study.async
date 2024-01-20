@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect
+from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from .models import (
     Categoria,
@@ -70,16 +71,13 @@ def deleteFlashcard(request, id):
         messages.add_message(
             request,
             constants.ERROR,
-            "Você não pode deletar esse flashcard"
+            'Você não tem permissão para deletar esse flashcard'
         )
-        return redirect('novo_flashcard')
     flashcard.delete()
     messages.add_message(
-            request,
-            messages.SUCCESS,
-            'Flashcard deletado com sucesso'
-        )
-    return redirect('novo_flashcard')
+        request, constants.SUCCESS, 'Flashcard deletado com sucesso!'
+    )
+    return redirect('/flashcard/novo_flashcard')
 
 
 @login_required(login_url='login')
@@ -142,7 +140,7 @@ def iniciar_desafio(request):
             flashcard_desafio.save()
             desafio.flashcards.add(flashcard_desafio)
 
-        return redirect(f'flashcard/listar_desafios/{desafio.id}')
+        return redirect(f'flashcard/desafio/{desafio.id}')
 
     context = {
         'categorias': categorias,
@@ -177,14 +175,67 @@ def listar_desafio(request):
     return render(request, 'listar_desafios.html', context)
 
 
+def deletar_desafio(request, id):
+    desafio = Desafio.objects.get(id=id)
+
+    if desafio.user != request.user:
+        messages.add_message(
+            request,
+            constants.ERROR,
+            'Você não tem permissão para deletar esse flashcard'
+        )
+    desafio.delete()
+    messages.add_message(
+        request,
+        constants.SUCCESS,
+        'Desafio deletado com sucesso!'
+    )
+    return redirect('listar_desafio')
+
+
 
 @login_required(login_url='login')
 def desafio(request, id):
     desafio = Desafio.objects.get(id=id)
 
+    if desafio.user != request.user:
+        raise Http404
+    
+
+    acertos = desafio.flashcards.filter(
+        respondido=True, 
+        acertou=True
+        ).count()
+    
+    erros = desafio.flashcards.filter(
+        respondido=True, 
+        acertou=False
+        ).count()
+    
+    faltantes = desafio.flashcards.filter(
+       respondido=False
+        ).count()
 
     context = {
-        'desafio': desafio
-        
+        'desafio': desafio,
+        'acertos': acertos,
+        'erros': erros,
+        'faltantes': faltantes
     }
-    return render(request, 'listar_desafios.html', context)
+    return render(request, 'desafio.html', context)
+
+
+def responder_flashcard(request, id):
+    flashcard_desafio = FlashcardDesafio.objects.get(id=id)
+    acertou = request.GET.get('acertou')
+    desafio_id = request.GET.get('desafio_id')
+
+    if not flashcard_desafio.flashcard.user == request.user:
+        raise Http404
+
+    flashcard_desafio.respondido = True
+
+    flashcard_desafio.acertou = True if acertou == '1' else False
+    flashcard_desafio.save()
+    
+    return redirect(f'/flashcard/desafio/{desafio_id}')
