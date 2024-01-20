@@ -9,7 +9,16 @@ def novo_flashcard(request):
     dificuldades = Flashcard.DIFICULDADE_CHOICES
     categorias = Categoria.objects.all()
 
-    flashcards = Flashcard.objects.filter(user_id=request.user.id)
+    flashcards = Flashcard.objects.filter(user=request.user)
+
+    categoria_filter = request.GET.get('categoria')
+    dificuldade_filter = request.GET.get('dificuldade')
+
+    if categoria_filter:
+        flashcards = flashcards.filter(categoria_id=categoria_filter)
+
+    if dificuldade_filter:
+        flashcards = flashcards.filter(dificuldade=dificuldade_filter)
 
     if request.method == 'POST':
         pergunta = request.POST.get('pergunta')
@@ -42,6 +51,6 @@ def novo_flashcard(request):
     context = {
         'dificuldades': dificuldades,
         'categorias': categorias,
-        'flashcard': flashcards
+        'flashcards': flashcards
     }
     return render(request, 'novo_flashcard.html', context)
