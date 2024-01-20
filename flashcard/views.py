@@ -140,7 +140,7 @@ def iniciar_desafio(request):
             flashcard_desafio.save()
             desafio.flashcards.add(flashcard_desafio)
 
-        return redirect(f'flashcard/desafio/{desafio.id}')
+        return redirect(f'/flashcard/desafio/{desafio.id}')
 
     context = {
         'categorias': categorias,
@@ -191,7 +191,6 @@ def deletar_desafio(request, id):
         'Desafio deletado com sucesso!'
     )
     return redirect('listar_desafio')
-
 
 
 @login_required(login_url='login')
