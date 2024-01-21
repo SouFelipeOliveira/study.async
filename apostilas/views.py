@@ -49,3 +49,22 @@ def excluir_apostila(request, id):
         'Apostila excluída com sucesso!'
     )
     return redirect('adicionar_apostilas')
+
+
+def apostila(request, id):
+    apostila = Apostila.objects.get(id=id)
+
+    ViewApostila.objects.create(
+        ip = request.META['REMOTE_ADDR'],
+        apostila = apostila
+    )
+
+    views_unicas = ViewApostila.objects.filter(apostila=apostila).values('ip').distinct().count()
+    views_totais = ViewApostila.objects.filter(apostila=apostila).count()
+
+    context = {
+        'apostila': apostila,
+        'views_unicas': views_unicas,
+        'views_totais': views_totais
+        }
+    return render(request, 'apostilas.html', context)

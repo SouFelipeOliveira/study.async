@@ -14,3 +14,6 @@ class Apostila(models.Model):
 class ViewApostila(models.Model):
     ip = models.GenericIPAddressField()
     apostila = models.ForeignKey(Apostila, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.ip
