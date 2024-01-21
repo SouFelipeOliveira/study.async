@@ -7,6 +7,7 @@
     <link href="{% static 'flashcard/styles/novo_flashcard.css' %}" rel="stylesheet">
     <link href="{% static 'flashcard/styles/iniciar_desafio.css' %}" rel="stylesheet">
     <link href="{% static 'flashcard/styles/listar_desafio.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'flashcard/styles/relatorio.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
 {% endblock 'cabecalho' %}
@@ -17,18 +18,37 @@
         <br>
         <br>
         <div class="row">
+            <hr>
             <div class="col-md">
                 <p class="fonte-secundaria">{{desafio.titulo}}</p>
-                <hr>
+                <!-- <hr> -->
                 <canvas id="grafico1"></canvas>
             </div>
+        
             <div class="col-md">
                 <br><br><br><br>
-                
                 <div style="background-color: white;">
-
+                    <hr>
                     <canvas id="grafico2"></canvas>
 
+                </div>
+            </div>
+        </div>
+        <br>
+        <hr>
+        <div class="row">
+            <div class="col-md">
+                <h3>Melhores matérias</h3>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Inglês </h5>
+                        <p class="card-text">
+                            Acertos: 10
+                        </p>
+                        <p class="card-text">
+                            Erros: 5
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

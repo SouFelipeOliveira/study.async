@@ -10,6 +10,7 @@ from .models import (
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.messages import constants
+from operator import itemgetter
 import json
 from django.http import HttpResponse
 
@@ -262,11 +263,14 @@ def relatorio(request, id):
             ).count()
         )
 
+#TODO FAZER O RANKING DE ACERTOS POR CATEGORIA
+        
     context = {
         'desafio': desafio,
         'dados_grafico': json.dumps(dados_grafico),
         'nome_categoria': json.dumps(nome_categoria),
-        'dados_grafico2': json.dumps(dados_grafico2)
+        'dados_grafico2': json.dumps(dados_grafico2),
+        'categorias': categorias
     }
 
     return render(request, 'relatorio.html', context)
