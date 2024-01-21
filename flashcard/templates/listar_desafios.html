@@ -50,6 +50,13 @@
         <br>
         <br>
         <div class="box-listar">
+            {% if messages %}
+                {%  for message in messages %}
+                    <section class="alert {{message.tags}}">
+                        {{message}}
+                    </section>
+                {% endfor %}
+            {% endif %}
             <table>
                 <thead>
                   <tr>

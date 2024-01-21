@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'cabecalho' %}
+
+    <link href="{% static 'users/styles/cadastro.css' %}" rel="stylesheet">
+    <link href="{% static 'flashcard/styles/novo_flashcard.css' %}" rel="stylesheet">
+    <link href="{% static 'flashcard/styles/iniciar_desafio.css' %}" rel="stylesheet">
+    <link href="{% static 'flashcard/styles/listar_desafio.css' %}" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+{% endblock 'cabecalho' %}
+
+
+{% block 'conteudo' %}
+    <div class="container">
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md">
+                <p class="fonte-secundaria">{{desafio.titulo}}</p>
+                <hr>
+                <canvas id="grafico1"></canvas>
+            </div>
+            <div class="col-md">
+                <br><br><br><br>
+                
+                <div style="background-color: white;">
+
+                    <canvas id="grafico2"></canvas>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript">
+        var dados_grafico = JSON.parse('{{ dados_grafico|escapejs }}')
+        var nome_categoria = JSON.parse('{{ nome_categoria|escapejs }}')
+        var dados_grafico2 = JSON.parse('{{ dados_grafico2|escapejs }}')
+    </script>
+    <script src="{% static  'flashcard/js/relatorios.js' %}"></script>
+
+{% endblock 'conteudo' %}

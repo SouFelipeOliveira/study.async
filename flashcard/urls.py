@@ -6,7 +6,8 @@ from .views import (
     listar_desafio,
     desafio,
     responder_flashcard,
-    deletar_desafio
+    deletar_desafio,
+    relatorio
 )
 
 
@@ -18,4 +19,5 @@ urlpatterns = [
     path('deletar_desafio/<int:id>/', deletar_desafio, name='deletar_desafio'),
     path('desafio/<int:id>/', desafio, name='desafio'),
     path('responder_flashcard/<int:id>/', responder_flashcard, name='responder_flashcard'),
+    path('relatorio/<int:id>/', relatorio, name='relatorio'),
 ]

@@ -10,6 +10,7 @@ from .models import (
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.messages import constants
+import json
 from django.http import HttpResponse
 
 @login_required(login_url='login')
@@ -238,3 +239,34 @@ def responder_flashcard(request, id):
     flashcard_desafio.save()
     
     return redirect(f'/flashcard/desafio/{desafio_id}')
+
+
+def relatorio(request, id):
+    desafio = Desafio.objects.get(id=id)
+
+    acertos = desafio.flashcards.filter(acertou=True).count()
+    erros = desafio.flashcards.filter(acertou=False).count()
+
+    dados_grafico = [acertos, erros]
+
+    categorias = desafio.categoria.all()
+
+    nome_categoria = [i.nome for i in categorias]
+
+    dados_grafico2 = []
+    for categoria in categorias:
+        dados_grafico2.append(
+            desafio.flashcards.filter(
+            Q(flashcard__categoria=categoria) &
+            Q(acertou=True)
+            ).count()
+        )
+
+    context = {
+        'desafio': desafio,
+        'dados_grafico': json.dumps(dados_grafico),
+        'nome_categoria': json.dumps(nome_categoria),
+        'dados_grafico2': json.dumps(dados_grafico2)
+    }
+
+    return render(request, 'relatorio.html', context)
