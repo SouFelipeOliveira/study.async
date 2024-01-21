@@ -1,0 +1,32 @@
+.card {
+    margin: 0;
+    width: 13rem;
+    height: 9rem;
+    border-style: none;
+    margin: 20px 20px 20px 0;
+    /* border: #1C1C1C 2px solid; */
+    /* border-radius: 10px; */
+}
+
+
+.card-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background-color: #1C1C1C;
+    padding: 10px;
+
+}
+
+.card-body {
+    padding: 0;
+    background-color: #103f65;
+    /* border-radius: 10px; */
+}
+
+.card-text {
+    margin: 0;
+    color: white;
+    padding-left: 15px;
+}
