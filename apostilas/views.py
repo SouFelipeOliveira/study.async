@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect
 from .models import Apostila, ViewApostila
 from django.contrib import messages
 from django.contrib.messages import constants
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 def adicionar_apostilas(request):
@@ -37,18 +38,14 @@ def adicionar_apostilas(request):
 
 
 def excluir_apostila(request, id):
-    apostila = Apostila.objects.get(id=id)
+    apostila = get_object_or_404(Apostila, id=id, user=request.user)
+    if apostila.arquivo:
+        apostila.arquivo.delete()
 
-    if apostila.user != request.user:
-        messages.add_message(
-            request,
-            constants.ERROR,
-            'Você não tem permissão para excluir essa apostila'
-        )
     apostila.delete()
     messages.add_message(
         request,
         constants.SUCCESS,
         'Apostila excluída com sucesso!'
     )
-    return render(request, 'adicionar_apostilas')
+    return redirect('adicionar_apostilas')

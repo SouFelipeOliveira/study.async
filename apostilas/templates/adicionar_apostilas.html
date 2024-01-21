@@ -59,7 +59,7 @@
                                 <td>{{apostila.titulo}}</td>
                                 <td><a href="" style="color: black; text-decoration: none;" class="btn-cadastro">Abrir</a></td>
                                 <td style="display: flex; justify-content: center;">
-                                    <a href="{% url 'excluir_apostila' %}"><i class='icone-exit bx bx-x-circle'></i></a>
+                                    <a href="{% url 'excluir_apostila' apostila.id %} "><i class='icone-exit bx bx-x-circle'></i></a>
                                 </td>
                             </tr>
                         {% endfor %}
